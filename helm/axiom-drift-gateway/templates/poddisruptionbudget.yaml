@@ -1,0 +1,11 @@
+{{- if .Values.ha.enabled }}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: axiom-drift-sovereign
+spec:
+  minAvailable: {{ .Values.ha.minAvailable }}
+  selector:
+    matchLabels:
+      app: axiom-drift-sovereign
+{{- end }}
