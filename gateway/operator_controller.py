@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from hashlib import sha256
 from typing import Protocol
 
-FINALIZER = "platform.axiomdrift.io/finalizer"
+FINALIZER = "platform.axiomzetasentinel.io/finalizer"
 
 
 class OperatorAdapter(Protocol):
@@ -48,7 +48,7 @@ class ReconcileResult:
     phase: str
 
 
-class AxiomDriftGatewayReconciler:
+class AxiomZetaSentinelGatewayReconciler:
     def __init__(self, adapter: OperatorAdapter) -> None:
         self.adapter = adapter
         self._last_known_good: dict[tuple[str, str], tuple[dict[str, object], dict[str, object], str]] = {}
@@ -248,7 +248,7 @@ class AxiomDriftGatewayReconciler:
         policy_bundle_config_map = (
             str(policy.get("bundleConfigMapName", "")).strip() if policy.get("bundleConfigMapName") is not None else ""
         )
-        policy_bundle_path = "/etc/axiom-drift/policy/policy-bundle.json" if policy_bundle_config_map else ""
+        policy_bundle_path = "/etc/axiom-zeta-sentinel/policy/policy-bundle.json" if policy_bundle_config_map else ""
         oidc = auth.get("oidc") if isinstance(auth.get("oidc"), dict) else {}
 
         env = [
@@ -293,12 +293,12 @@ class AxiomDriftGatewayReconciler:
             volume_mounts.append(
                 {
                     "name": "policy-bundle",
-                    "mountPath": "/etc/axiom-drift/policy",
+                    "mountPath": "/etc/axiom-zeta-sentinel/policy",
                     "readOnly": True,
                 }
             )
 
-        labels = {"app": "axiom-drift-sovereign", "axiomdrift.io/instance": str(resource["metadata"]["name"])}
+        labels = {"app": "axiom-zeta-sentinel-sovereign", "axiomzetasentinel.io/instance": str(resource["metadata"]["name"])}
         return {
             "apiVersion": "apps/v1",
             "kind": "Deployment",
@@ -306,7 +306,7 @@ class AxiomDriftGatewayReconciler:
                 "name": str(resource["metadata"]["name"]),
                 "labels": labels,
                 "annotations": {
-                    "axiomdrift.io/reconciled-at": str(int(time.time())),
+                    "axiomzetasentinel.io/reconciled-at": str(int(time.time())),
                 },
             },
             "spec": {
@@ -340,7 +340,7 @@ class AxiomDriftGatewayReconciler:
         }
 
     def _desired_service(self, name: str) -> dict[str, object]:
-        labels = {"app": "axiom-drift-sovereign", "axiomdrift.io/instance": name}
+        labels = {"app": "axiom-zeta-sentinel-sovereign", "axiomzetasentinel.io/instance": name}
         return {
             "apiVersion": "v1",
             "kind": "Service",
@@ -374,19 +374,19 @@ class KubernetesOperatorAdapter:
 
     def list_custom_resources(self) -> list[dict[str, object]]:  # pragma: no cover
         out = self._custom.list_cluster_custom_object(
-            group="platform.axiomdrift.io",
+            group="platform.axiomzetasentinel.io",
             version="v1alpha1",
-            plural="axiomdriftgateways",
+            plural="axiomzetasentinelgateways",
         )
         items = out.get("items", [])
         return items if isinstance(items, list) else []
 
     def patch_custom_resource(self, *, namespace: str, name: str, patch: dict[str, object]) -> None:  # pragma: no cover
         self._custom.patch_namespaced_custom_object(
-            group="platform.axiomdrift.io",
+            group="platform.axiomzetasentinel.io",
             version="v1alpha1",
             namespace=namespace,
-            plural="axiomdriftgateways",
+            plural="axiomzetasentinelgateways",
             name=name,
             body=patch,
         )
@@ -440,10 +440,10 @@ class KubernetesOperatorAdapter:
 
 
 def run_operator() -> None:  # pragma: no cover
-    mode = os.getenv("AXIOM_DRIFT_OPERATOR_MODE", "kubernetes").strip().lower()
+    mode = os.getenv("AXIOM_ZETA_SENTINEL_OPERATOR_MODE", "kubernetes").strip().lower()
     if mode != "kubernetes":
-        raise RuntimeError("Only AXIOM_DRIFT_OPERATOR_MODE=kubernetes is currently supported")
+        raise RuntimeError("Only AXIOM_ZETA_SENTINEL_OPERATOR_MODE=kubernetes is currently supported")
     adapter = KubernetesOperatorAdapter()
-    reconciler = AxiomDriftGatewayReconciler(adapter)
-    poll = float(os.getenv("AXIOM_DRIFT_OPERATOR_POLL_SECONDS", "5"))
+    reconciler = AxiomZetaSentinelGatewayReconciler(adapter)
+    poll = float(os.getenv("AXIOM_ZETA_SENTINEL_OPERATOR_POLL_SECONDS", "5"))
     reconciler.run_forever(poll_seconds=poll)

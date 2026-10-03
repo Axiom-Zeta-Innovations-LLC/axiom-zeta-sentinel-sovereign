@@ -2,7 +2,7 @@ replicaCount: 1
 revisionHistoryLimit: 3
 
 image:
-  repository: ghcr.io/anthonyrenecastro-create/axiom-drift-sovereign
+  repository: ghcr.io/anthonyrenecastro-create/axiom-zeta-sentinel-sovereign
   tag: latest
   pullPolicy: IfNotPresent
   pullSecrets: []
@@ -41,7 +41,7 @@ auth:
     sessionSecret: ""
     sessionTtlSeconds: "3600"
     sessionMaxLifetimeSeconds: "86400"
-    cookieName: "axiom_drift_session"
+    cookieName: "axiom_zeta_sentinel_session"
     cookieSecure: "true"
     auditLogPath: ""
     auditLogMaxBytes: "10485760"

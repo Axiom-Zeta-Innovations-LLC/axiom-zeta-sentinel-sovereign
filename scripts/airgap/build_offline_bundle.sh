@@ -3,8 +3,8 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
 OUT_DIR="${OUT_DIR:-${ROOT_DIR}/dist/airgap}"
-IMAGE="${IMAGE:-ghcr.io/anthonyrenecastro-create/axiom-drift-sovereign:latest}"
-CHART_DIR="${CHART_DIR:-${ROOT_DIR}/helm/axiom-drift-sovereign}"
+IMAGE="${IMAGE:-ghcr.io/anthonyrenecastro-create/axiom-zeta-sentinel-sovereign:latest}"
+CHART_DIR="${CHART_DIR:-${ROOT_DIR}/helm/axiom-zeta-sentinel-sovereign}"
 TIMESTAMP="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 COSIGN_KEY_PATH="${COSIGN_KEY_PATH:-}"
 COSIGN_PUB_PATH="${COSIGN_PUB_PATH:-}"
@@ -41,7 +41,7 @@ if command -v syft >/dev/null 2>&1; then
 else
   echo "[airgap] syft not found; writing placeholder sbom"
   cat >"$OUT_DIR/sbom.spdx.json" <<'EOF'
-{"spdxVersion":"SPDX-2.3","name":"axiom-drift-sovereign","comment":"Install syft to generate full SBOM"}
+{"spdxVersion":"SPDX-2.3","name":"axiom-zeta-sentinel-sovereign","comment":"Install syft to generate full SBOM"}
 EOF
 fi
 printf '%s\n' "sbom.spdx.json" >>"$FILE_LIST"

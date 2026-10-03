@@ -21,8 +21,8 @@ def test_run_ha_disruption_suite():
 
     env = os.environ.copy()
     env.setdefault("NAMESPACE", "default")
-    env.setdefault("GATEWAY_LABEL", "app=axiom-drift-sovereign")
-    env.setdefault("GATEWAY_DEPLOYMENT", "axiom-drift-sovereign")
+    env.setdefault("GATEWAY_LABEL", "app=axiom-zeta-sentinel-sovereign")
+    env.setdefault("GATEWAY_DEPLOYMENT", "axiom-zeta-sentinel-sovereign")
 
     completed = subprocess.run(
         [str(script)],

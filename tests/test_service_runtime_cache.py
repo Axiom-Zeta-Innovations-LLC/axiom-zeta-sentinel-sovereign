@@ -10,8 +10,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 
-def _install_fake_axiom_drift_core() -> None:
-    module = types.ModuleType("axiom_drift_core")
+def _install_fake_axiom_zeta_sentinel_core() -> None:
+    module = types.ModuleType("axiom_zeta_sentinel_core")
 
     class DriftEngine:
         def __init__(self, nx: int, ny: int, n_fields: int, seed: int, baseline_windows: int = 5) -> None:
@@ -40,12 +40,12 @@ def _install_fake_axiom_drift_core() -> None:
             self._calls = int(state.get("calls", 0))
 
     module.DriftEngine = DriftEngine
-    sys.modules["axiom_drift_core"] = module
+    sys.modules["axiom_zeta_sentinel_core"] = module
 
 
 def test_service_does_not_cache_tenant_runtime_when_disabled(monkeypatch):
     monkeypatch.setenv("TENANT_RUNTIME_CACHE_ENABLED", "false")
-    _install_fake_axiom_drift_core()
+    _install_fake_axiom_zeta_sentinel_core()
 
     if "gateway.core.service" in sys.modules:
         importlib.reload(sys.modules["gateway.core.service"])
@@ -69,7 +69,7 @@ def test_service_does_not_cache_tenant_runtime_when_disabled(monkeypatch):
 
 def test_service_caches_tenant_runtime_when_enabled(monkeypatch):
     monkeypatch.setenv("TENANT_RUNTIME_CACHE_ENABLED", "true")
-    _install_fake_axiom_drift_core()
+    _install_fake_axiom_zeta_sentinel_core()
 
     if "gateway.core.service" in sys.modules:
         importlib.reload(sys.modules["gateway.core.service"])

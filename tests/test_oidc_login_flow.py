@@ -11,8 +11,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 
-def _install_fake_axiom_drift_core() -> None:
-    module = types.ModuleType("axiom_drift_core")
+def _install_fake_axiom_zeta_sentinel_core() -> None:
+    module = types.ModuleType("axiom_zeta_sentinel_core")
 
     class DriftEngine:
         def __init__(self, nx: int, ny: int, n_fields: int, seed: int, baseline_windows: int = 5) -> None:
@@ -41,7 +41,7 @@ def _install_fake_axiom_drift_core() -> None:
             pass
 
     module.DriftEngine = DriftEngine
-    sys.modules["axiom_drift_core"] = module
+    sys.modules["axiom_zeta_sentinel_core"] = module
 
 
 def _build_client(monkeypatch) -> TestClient:
@@ -49,17 +49,17 @@ def _build_client(monkeypatch) -> TestClient:
     monkeypatch.setenv("TEAM_STORE_BACKEND", "memory")
     monkeypatch.setenv("AUTH_MODE", "oidc")
     monkeypatch.setenv("OIDC_ISSUER", "https://issuer.example.com")
-    monkeypatch.setenv("OIDC_AUDIENCE", "axiom-drift")
+    monkeypatch.setenv("OIDC_AUDIENCE", "axiom-zeta-sentinel")
     monkeypatch.setenv("OIDC_JWKS_URL", "https://issuer.example.com/jwks")
     monkeypatch.setenv("OIDC_AUTHORIZATION_URL", "https://issuer.example.com/authorize")
     monkeypatch.setenv("OIDC_TOKEN_URL", "https://issuer.example.com/token")
-    monkeypatch.setenv("OIDC_CLIENT_ID", "axiom-drift-client")
-    monkeypatch.setenv("OIDC_CLIENT_SECRET", "axiom-drift-secret")
+    monkeypatch.setenv("OIDC_CLIENT_ID", "axiom-zeta-sentinel-client")
+    monkeypatch.setenv("OIDC_CLIENT_SECRET", "axiom-zeta-sentinel-secret")
     monkeypatch.setenv("OIDC_SESSION_SECRET", "unit-test-session-secret")
     monkeypatch.setenv("OIDC_SESSION_MAX_LIFETIME_SECONDS", "7200")
     monkeypatch.setenv("OIDC_COOKIE_SECURE", "false")
 
-    _install_fake_axiom_drift_core()
+    _install_fake_axiom_zeta_sentinel_core()
 
     for name in [
         "gateway.core.team",
@@ -96,7 +96,7 @@ def test_oidc_login_redirect_and_callback_session(monkeypatch):
     assert parsed.scheme == "https"
     assert parsed.netloc == "issuer.example.com"
     params = parse_qs(parsed.query)
-    assert params["client_id"][0] == "axiom-drift-client"
+    assert params["client_id"][0] == "axiom-zeta-sentinel-client"
     assert params["response_type"][0] == "code"
     state = params["state"][0]
 
@@ -110,7 +110,7 @@ def test_oidc_login_redirect_and_callback_session(monkeypatch):
         "verify_oidc_token",
         lambda *_args, **_kwargs: auth_mod.AuthContext(
             user_id="oidc-user-1",
-            groups=("axiom-drift-users",),
+            groups=("axiom-zeta-sentinel-users",),
             auth_type="oidc",
         ),
     )
@@ -118,7 +118,7 @@ def test_oidc_login_redirect_and_callback_session(monkeypatch):
     callback = client.get(f"/v1/auth/oidc/callback?code=auth-code-1&state={state}", follow_redirects=False)
     assert callback.status_code == 302
     assert callback.headers["location"] == "/dashboard"
-    assert "axiom_drift_session=" in callback.headers["set-cookie"]
+    assert "axiom_zeta_sentinel_session=" in callback.headers["set-cookie"]
 
     session = client.get("/v1/auth/session")
     assert session.status_code == 200
@@ -130,7 +130,7 @@ def test_oidc_login_redirect_and_callback_session(monkeypatch):
     refresh = client.post("/v1/auth/session/refresh")
     assert refresh.status_code == 200
     assert refresh.json()["status"] == "ok"
-    assert "axiom_drift_session=" in refresh.headers["set-cookie"]
+    assert "axiom_zeta_sentinel_session=" in refresh.headers["set-cookie"]
 
     logout = client.post("/v1/auth/logout")
     assert logout.status_code == 200
@@ -150,7 +150,7 @@ def test_oidc_callback_rejects_replayed_state(monkeypatch):
     monkeypatch.setattr(
         routes_auth,
         "verify_oidc_token",
-        lambda *_args, **_kwargs: auth_mod.AuthContext(user_id="oidc-user-1", groups=("axiom-drift-users",), auth_type="oidc"),
+        lambda *_args, **_kwargs: auth_mod.AuthContext(user_id="oidc-user-1", groups=("axiom-zeta-sentinel-users",), auth_type="oidc"),
     )
 
     first = client.get(f"/v1/auth/oidc/callback?code=auth-code-1&state={state}", follow_redirects=False)
@@ -174,7 +174,7 @@ def test_oidc_auth_audit_log_records_login_refresh_logout(monkeypatch, tmp_path)
     monkeypatch.setattr(
         routes_auth,
         "verify_oidc_token",
-        lambda *_args, **_kwargs: auth_mod.AuthContext(user_id="oidc-user-2", groups=("axiom-drift-users",), auth_type="oidc"),
+        lambda *_args, **_kwargs: auth_mod.AuthContext(user_id="oidc-user-2", groups=("axiom-zeta-sentinel-users",), auth_type="oidc"),
     )
 
     callback = client.get(f"/v1/auth/oidc/callback?code=auth-code-2&state={state}", follow_redirects=False)

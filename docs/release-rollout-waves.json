@@ -1,5 +1,5 @@
 {
-  "service": "axiom-drift-sovereign",
+  "service": "axiom-zeta-sentinel-sovereign",
   "waves": [
     {
       "name": "canary",

@@ -1,9 +1,9 @@
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: axiomdriftgateways.platform.axiomdrift.io
+  name: axiomzetasentinelgateways.platform.axiomzetasentinel.io
 spec:
-  group: platform.axiomdrift.io
+  group: platform.axiomzetasentinel.io
   scope: Namespaced
   conversion:
     strategy: Webhook
@@ -12,14 +12,14 @@ spec:
         - v1
       clientConfig:
         service:
-          namespace: axiomdrift-system
-          name: axiomdrift-operator-webhook
-          path: /convert-platform-axiomdrift-io
+          namespace: axiomzetasentinel-system
+          name: axiomzetasentinel-operator-webhook
+          path: /convert-platform-axiomzetasentinel-io
         caBundle: ""
   names:
-    plural: axiomdriftgateways
-    singular: axiomdriftgateway
-    kind: AxiomDriftGateway
+    plural: axiomzetasentinelgateways
+    singular: axiomzetasentinelgateway
+    kind: AxiomZetaSentinelGateway
     shortNames:
       - plg
   versions:

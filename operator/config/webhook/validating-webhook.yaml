@@ -1,29 +1,29 @@
 apiVersion: admissionregistration.k8s.io/v1
 kind: ValidatingWebhookConfiguration
 metadata:
-  name: axiomdrift-gateway-validating-webhook
+  name: axiomzetasentinel-gateway-validating-webhook
 webhooks:
-  - name: vaxiomdriftgateways.platform.axiomdrift.io
+  - name: vaxiomzetasentinelgateways.platform.axiomzetasentinel.io
     admissionReviewVersions: ["v1"]
     sideEffects: None
     failurePolicy: Fail
     matchPolicy: Equivalent
     rules:
       - operations: ["CREATE", "UPDATE"]
-        apiGroups: ["platform.axiomdrift.io"]
+        apiGroups: ["platform.axiomzetasentinel.io"]
         apiVersions: ["v1alpha1"]
-        resources: ["axiomdriftgateways"]
+        resources: ["axiomzetasentinelgateways"]
     clientConfig:
       service:
-        namespace: axiomdrift-system
-        name: axiomdrift-operator-webhook
-        path: /validate-platform-axiomdrift-io-v1alpha1-axiomdriftgateway
+        namespace: axiomzetasentinel-system
+        name: axiomzetasentinel-operator-webhook
+        path: /validate-platform-axiomzetasentinel-io-v1alpha1-axiomzetasentinelgateway
       caBundle: ""
 ---
 apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
-  name: axiomdriftgateways.platform.axiomdrift.io
+  name: axiomzetasentinelgateways.platform.axiomzetasentinel.io
 spec:
   conversion:
     strategy: Webhook
@@ -31,7 +31,7 @@ spec:
       conversionReviewVersions: ["v1"]
       clientConfig:
         service:
-          namespace: axiomdrift-system
-          name: axiomdrift-operator-webhook
-          path: /convert-platform-axiomdrift-io
+          namespace: axiomzetasentinel-system
+          name: axiomzetasentinel-operator-webhook
+          path: /convert-platform-axiomzetasentinel-io
         caBundle: ""

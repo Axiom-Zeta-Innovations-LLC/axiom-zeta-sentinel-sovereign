@@ -2,8 +2,8 @@
 set -euo pipefail
 
 NAMESPACE="${NAMESPACE:-default}"
-GATEWAY_LABEL="${GATEWAY_LABEL:-app=axiom-drift-sovereign}"
-GATEWAY_DEPLOYMENT="${GATEWAY_DEPLOYMENT:-axiom-drift-sovereign}"
+GATEWAY_LABEL="${GATEWAY_LABEL:-app=axiom-zeta-sentinel-sovereign}"
+GATEWAY_DEPLOYMENT="${GATEWAY_DEPLOYMENT:-axiom-zeta-sentinel-sovereign}"
 DEPENDENCY_DEPLOYMENT="${DEPENDENCY_DEPLOYMENT:-}"
 DEPENDENCY_REPLICAS="${DEPENDENCY_REPLICAS:-1}"
 

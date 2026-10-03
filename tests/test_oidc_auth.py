@@ -10,8 +10,8 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 
-def _install_fake_axiom_drift_core() -> None:
-    module = types.ModuleType("axiom_drift_core")
+def _install_fake_axiom_zeta_sentinel_core() -> None:
+    module = types.ModuleType("axiom_zeta_sentinel_core")
 
     class DriftEngine:
         def __init__(self, nx: int, ny: int, n_fields: int, seed: int, baseline_windows: int = 5) -> None:
@@ -50,7 +50,7 @@ def _install_fake_axiom_drift_core() -> None:
             pass
 
     module.DriftEngine = DriftEngine
-    sys.modules["axiom_drift_core"] = module
+    sys.modules["axiom_zeta_sentinel_core"] = module
 
 
 def _build_oidc_client(
@@ -64,7 +64,7 @@ def _build_oidc_client(
     monkeypatch.setenv("OIDC_REQUIRED_GROUPS", required_groups)
     monkeypatch.setenv("OIDC_GROUP_ROLE_MAP", group_role_map)
 
-    _install_fake_axiom_drift_core()
+    _install_fake_axiom_zeta_sentinel_core()
 
     for name in [
         "gateway.core.team",

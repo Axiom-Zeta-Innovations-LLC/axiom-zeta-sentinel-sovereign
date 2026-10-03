@@ -11,9 +11,9 @@ This suite automates resilience checks for Kubernetes HA deployment behavior.
 ## Usage
 
 ```bash
-NAMESPACE=axiomdrift \
-GATEWAY_LABEL=app=axiom-drift-sovereign \
-GATEWAY_DEPLOYMENT=axiom-drift-sovereign \
+NAMESPACE=axiomzetasentinel \
+GATEWAY_LABEL=app=axiom-zeta-sentinel-sovereign \
+GATEWAY_DEPLOYMENT=axiom-zeta-sentinel-sovereign \
 DEPENDENCY_DEPLOYMENT=postgres \
 DEPENDENCY_REPLICAS=1 \
 bash scripts/ha/run_disruption_suite.sh

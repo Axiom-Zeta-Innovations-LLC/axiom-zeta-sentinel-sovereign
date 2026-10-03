@@ -22,7 +22,7 @@ def test_airgap_bundle_build_and_verify_pipeline(tmp_path):
     out_dir = tmp_path / "bundle"
     env = {
         "OUT_DIR": str(out_dir),
-        "IMAGE": "ghcr.io/example/axiom-drift:test",
+        "IMAGE": "ghcr.io/example/axiom-zeta-sentinel:test",
         "PATH": "/usr/local/bin:/usr/bin:/bin",
     }
 

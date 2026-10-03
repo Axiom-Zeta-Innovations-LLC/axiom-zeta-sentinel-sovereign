@@ -53,7 +53,7 @@ else
 	fi
 
 	echo "[governance] rendering helm templates"
-	if helm template test ./helm/axiom-drift-sovereign >"$REPORT_DIR/helm-template.yaml" 2>"$REPORT_DIR/helm.log"; then
+	if helm template test ./helm/axiom-zeta-sentinel-sovereign >"$REPORT_DIR/helm-template.yaml" 2>"$REPORT_DIR/helm.log"; then
 		HELM_STATUS="passed"
 	else
 		echo "[governance] helm template failed (see $REPORT_DIR/helm.log)"

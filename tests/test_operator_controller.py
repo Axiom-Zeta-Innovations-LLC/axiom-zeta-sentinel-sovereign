@@ -1,4 +1,4 @@
-from gateway.operator_controller import FINALIZER, AxiomDriftGatewayReconciler
+from gateway.operator_controller import FINALIZER, AxiomZetaSentinelGatewayReconciler
 
 
 class FakeAdapter:
@@ -37,22 +37,22 @@ class FakeAdapter:
 def _base_resource():
     return {
         "metadata": {
-            "name": "axiom-drift-enterprise",
-            "namespace": "axiomdrift",
+            "name": "axiom-zeta-sentinel-enterprise",
+            "namespace": "axiomzetasentinel",
             "generation": 3,
             "finalizers": [],
         },
         "spec": {
-            "image": "ghcr.io/acme/axiom-drift:latest",
+            "image": "ghcr.io/acme/axiom-zeta-sentinel:latest",
             "replicas": 3,
             "tenantRuntimeCacheEnabled": False,
-            "auth": {"mode": "oidc", "requiredGroups": ["axiom-drift-users"]},
+            "auth": {"mode": "oidc", "requiredGroups": ["axiom-zeta-sentinel-users"]},
             "policy": {
                 "mode": "opa",
                 "opaUrl": "http://opa:8181",
                 "bundleConfigMapName": "policy-bundle",
                 "defaultDecision": "deny",
-                "decisionLogPath": "/var/log/axiom-drift/policy.jsonl",
+                "decisionLogPath": "/var/log/axiom-zeta-sentinel/policy.jsonl",
             },
             "airgap": {
                 "enabled": True,
@@ -66,7 +66,7 @@ def _base_resource():
 
 def test_desired_deployment_includes_airgap_policy_env_and_bundle_mount():
     adapter = FakeAdapter(resources=[])
-    reconciler = AxiomDriftGatewayReconciler(adapter)
+    reconciler = AxiomZetaSentinelGatewayReconciler(adapter)
 
     deployment = reconciler._desired_deployment(_base_resource())
     template_spec = deployment["spec"]["template"]["spec"]
@@ -75,8 +75,8 @@ def test_desired_deployment_includes_airgap_policy_env_and_bundle_mount():
 
     assert env["AIRGAP_ALLOWED_HOSTS"] == "idp.example.com,opa.svc.cluster.local"
     assert env["POLICY_DEFAULT_DECISION"] == "deny"
-    assert env["POLICY_DECISION_LOG_PATH"] == "/var/log/axiom-drift/policy.jsonl"
-    assert env["POLICY_BUNDLE_PATH"] == "/etc/axiom-drift/policy/policy-bundle.json"
+    assert env["POLICY_DECISION_LOG_PATH"] == "/var/log/axiom-zeta-sentinel/policy.jsonl"
+    assert env["POLICY_BUNDLE_PATH"] == "/etc/axiom-zeta-sentinel/policy/policy-bundle.json"
     assert env["TENANT_RUNTIME_CACHE_ENABLED"] == "false"
     assert env["OIDC_SESSION_TTL_SECONDS"] == "3600"
     assert env["OIDC_SESSION_MAX_LIFETIME_SECONDS"] == "86400"
@@ -86,19 +86,19 @@ def test_desired_deployment_includes_airgap_policy_env_and_bundle_mount():
     volume_mounts = container["volumeMounts"]
     assert {
         "name": "policy-bundle",
-        "mountPath": "/etc/axiom-drift/policy",
+        "mountPath": "/etc/axiom-zeta-sentinel/policy",
         "readOnly": True,
     } in volume_mounts
 
 
 def test_desired_deployment_includes_auth_audit_log_settings():
     adapter = FakeAdapter(resources=[])
-    reconciler = AxiomDriftGatewayReconciler(adapter)
+    reconciler = AxiomZetaSentinelGatewayReconciler(adapter)
     resource = _base_resource()
     resource["spec"]["auth"]["oidc"] = {
         "sessionTtlSeconds": 1200,
         "sessionMaxLifetimeSeconds": 7200,
-        "auditLogPath": "/var/log/axiom-drift/auth-audit.jsonl",
+        "auditLogPath": "/var/log/axiom-zeta-sentinel/auth-audit.jsonl",
         "auditLogMaxBytes": 2048,
         "auditLogBackupCount": 3,
     }
@@ -106,14 +106,14 @@ def test_desired_deployment_includes_auth_audit_log_settings():
     deployment = reconciler._desired_deployment(resource)
     env = {item["name"]: item["value"] for item in deployment["spec"]["template"]["spec"]["containers"][0]["env"]}
 
-    assert env["AUTH_AUDIT_LOG_PATH"] == "/var/log/axiom-drift/auth-audit.jsonl"
+    assert env["AUTH_AUDIT_LOG_PATH"] == "/var/log/axiom-zeta-sentinel/auth-audit.jsonl"
     assert env["AUTH_AUDIT_LOG_MAX_BYTES"] == "2048"
     assert env["AUTH_AUDIT_LOG_BACKUP_COUNT"] == "3"
 
 
 def test_reconcile_adds_finalizer_applies_resources_and_sets_ready_status():
     adapter = FakeAdapter(resources=[_base_resource()])
-    reconciler = AxiomDriftGatewayReconciler(adapter)
+    reconciler = AxiomZetaSentinelGatewayReconciler(adapter)
 
     results = reconciler.reconcile_once()
 
@@ -134,7 +134,7 @@ def test_reconcile_handles_deletion_with_finalizer_cleanup_and_status():
     resource["metadata"]["deletionTimestamp"] = "2026-07-09T00:00:00Z"
 
     adapter = FakeAdapter(resources=[resource])
-    reconciler = AxiomDriftGatewayReconciler(adapter)
+    reconciler = AxiomZetaSentinelGatewayReconciler(adapter)
 
     results = reconciler.reconcile_once()
 
@@ -150,7 +150,7 @@ def test_reconcile_handles_deletion_with_finalizer_cleanup_and_status():
 def test_reconcile_sets_degraded_status_on_apply_error():
     adapter = FakeAdapter(resources=[_base_resource()])
     adapter.fail_apply = True
-    reconciler = AxiomDriftGatewayReconciler(adapter)
+    reconciler = AxiomZetaSentinelGatewayReconciler(adapter)
 
     results = reconciler.reconcile_once()
 
@@ -165,7 +165,7 @@ def test_reconcile_sets_degraded_status_on_apply_error():
 def test_reconcile_sets_progressing_until_rollout_is_healthy():
     adapter = FakeAdapter(resources=[_base_resource()])
     adapter.healthy = False
-    reconciler = AxiomDriftGatewayReconciler(adapter)
+    reconciler = AxiomZetaSentinelGatewayReconciler(adapter)
 
     results = reconciler.reconcile_once()
 
@@ -180,7 +180,7 @@ def test_reconcile_sets_progressing_until_rollout_is_healthy():
 def test_reconcile_applies_rollback_when_previous_good_state_exists():
     resource = _base_resource()
     adapter = FakeAdapter(resources=[resource])
-    reconciler = AxiomDriftGatewayReconciler(adapter)
+    reconciler = AxiomZetaSentinelGatewayReconciler(adapter)
 
     first = reconciler.reconcile_once()
     assert first[0].phase == "Ready"

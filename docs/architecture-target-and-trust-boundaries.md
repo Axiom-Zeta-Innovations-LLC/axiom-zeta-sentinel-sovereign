@@ -2,14 +2,14 @@
 
 ## Scope
 
-This document defines the production target architecture, security domains, and trust boundaries for enterprise deployment of Axiom Drift Sovereign Gateway.
+This document defines the production target architecture, security domains, and trust boundaries for enterprise deployment of Axiom Zeta Sentinel Sovereign Gateway.
 
 ## Target architecture
 
 ### Core components
 
 - Edge ingress/API gateway
-- Axiom Drift FastAPI service
+- Axiom Zeta Sentinel FastAPI service
 - OIDC identity provider integration
 - Policy engine (builtin or OPA)
 - Shared state backend (Redis primary, in-process continuity fallback)

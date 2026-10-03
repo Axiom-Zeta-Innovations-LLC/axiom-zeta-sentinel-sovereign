@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: axiom-drift-sovereign
+  name: axiom-zeta-sentinel-sovereign
 spec:
   revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
   replicas: {{ .Values.replicaCount }}
@@ -12,11 +12,11 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: axiom-drift-sovereign
+      app: axiom-zeta-sentinel-sovereign
   template:
     metadata:
       labels:
-        app: axiom-drift-sovereign
+        app: axiom-zeta-sentinel-sovereign
     spec:
       {{- if .Values.image.pullSecrets }}
       imagePullSecrets:
@@ -29,7 +29,7 @@ spec:
           whenUnsatisfiable: ScheduleAnyway
           labelSelector:
             matchLabels:
-              app: axiom-drift-sovereign
+              app: axiom-zeta-sentinel-sovereign
       affinity:
         podAntiAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
@@ -38,7 +38,7 @@ spec:
                 topologyKey: kubernetes.io/hostname
                 labelSelector:
                   matchLabels:
-                    app: axiom-drift-sovereign
+                    app: axiom-zeta-sentinel-sovereign
       {{- end }}
       containers:
         - name: gateway

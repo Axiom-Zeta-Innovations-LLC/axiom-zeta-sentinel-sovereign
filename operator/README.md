@@ -1,10 +1,10 @@
-# Axiom Drift Kubernetes Operator (Scaffold)
+# Axiom Zeta Sentinel Kubernetes Operator (Scaffold)
 
 This directory provides an initial operator scaffold for managing enterprise deployments.
 
 ## Scope of this scaffold
 
-- CRD shape for a `AxiomDriftGateway` custom resource
+- CRD shape for a `AxiomZetaSentinelGateway` custom resource
 - Sample manifest for cluster installation
 - API fields for SSO, HA, air-gapped mode, and policy configuration
 - Runtime wiring for air-gap allowlists and policy defaults/log paths
@@ -26,10 +26,10 @@ This directory provides an initial operator scaffold for managing enterprise dep
 
 Use either entrypoint to run the reconciler loop:
 
-- `axiom-drift-operator`
+- `axiom-zeta-sentinel-operator`
 - `python operator/controller.py`
 
 Run webhook server:
 
-- `axiom-drift-operator-webhook`
+- `axiom-zeta-sentinel-operator-webhook`
 - `python operator/webhook_server.py`

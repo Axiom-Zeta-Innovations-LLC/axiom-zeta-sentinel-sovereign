@@ -2,7 +2,7 @@
 
 ## Channels
 
-- Internal incident/release channel: #axiomdrift-release
+- Internal incident/release channel: #axiomzetasentinel-release
 - Stakeholder updates: release mailing list
 - External status page owner: incident commander
 

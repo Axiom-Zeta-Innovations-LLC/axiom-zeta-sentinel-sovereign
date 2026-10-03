@@ -103,7 +103,7 @@ def test_policy_decision_log_rotation_without_backups_removes_old_file(tmp_path,
 
 def test_opa_blocked_egress_falls_back_to_default_deny(monkeypatch):
     monkeypatch.setenv("POLICY_MODE", "opa")
-    monkeypatch.setenv("OPA_URL", "https://opa.example.com/v1/data/axiomdrift/decision")
+    monkeypatch.setenv("OPA_URL", "https://opa.example.com/v1/data/axiomzetasentinel/decision")
     monkeypatch.setenv("AIRGAPPED_MODE", "true")
     monkeypatch.setenv("ALLOW_OUTBOUND_NETWORK", "false")
     monkeypatch.delenv("AIRGAP_ALLOWED_HOSTS", raising=False)

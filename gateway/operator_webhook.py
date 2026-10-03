@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from fastapi import FastAPI, HTTPException
 
-app = FastAPI(title="Axiom Drift Operator Webhook", version="0.1.0")
+app = FastAPI(title="Axiom Zeta Sentinel Operator Webhook", version="0.1.0")
 
 
 def _extract_review(payload: dict[str, object]) -> tuple[str | None, dict[str, object] | None]:
@@ -28,7 +28,7 @@ def _admission_response(*, uid: str | None, allowed: bool, status_message: str =
     return out
 
 
-def _validate_axiomdrift_gateway(obj: dict[str, object]) -> tuple[bool, str]:
+def _validate_axiomzetasentinel_gateway(obj: dict[str, object]) -> tuple[bool, str]:
     spec = obj.get("spec")
     if not isinstance(spec, dict):
         return False, "spec is required"
@@ -56,18 +56,18 @@ def _validate_axiomdrift_gateway(obj: dict[str, object]) -> tuple[bool, str]:
     return True, ""
 
 
-@app.post("/validate-platform-axiomdrift-io-v1alpha1-axiomdriftgateway")
-def validate_axiomdrift_gateway(review: dict[str, object]) -> dict[str, object]:
+@app.post("/validate-platform-axiomzetasentinel-io-v1alpha1-axiomzetasentinelgateway")
+def validate_axiomzetasentinel_gateway(review: dict[str, object]) -> dict[str, object]:
     uid, obj = _extract_review(review)
     if obj is None:
         return _admission_response(uid=uid, allowed=False, status_message="request.object is required")
 
-    allowed, message = _validate_axiomdrift_gateway(obj)
+    allowed, message = _validate_axiomzetasentinel_gateway(obj)
     return _admission_response(uid=uid, allowed=allowed, status_message=message)
 
 
-@app.post("/convert-platform-axiomdrift-io")
-def convert_axiomdrift_gateway(review: dict[str, object]) -> dict[str, object]:
+@app.post("/convert-platform-axiomzetasentinel-io")
+def convert_axiomzetasentinel_gateway(review: dict[str, object]) -> dict[str, object]:
     request = review.get("request")
     if not isinstance(request, dict):
         raise HTTPException(status_code=400, detail="ConversionReview.request is required")
@@ -101,6 +101,6 @@ def run_webhook() -> None:  # pragma: no cover
     import os
     import uvicorn
 
-    host = os.getenv("AXIOM_DRIFT_WEBHOOK_HOST", "0.0.0.0")
-    port = int(os.getenv("AXIOM_DRIFT_WEBHOOK_PORT", "9443"))
+    host = os.getenv("AXIOM_ZETA_SENTINEL_WEBHOOK_HOST", "0.0.0.0")
+    port = int(os.getenv("AXIOM_ZETA_SENTINEL_WEBHOOK_PORT", "9443"))
     uvicorn.run("gateway.operator_webhook:app", host=host, port=port)

@@ -156,7 +156,7 @@ def load_settings() -> GatewaySettings:
             300,
             int(os.getenv("OIDC_SESSION_MAX_LIFETIME_SECONDS", "86400")),
         ),
-        oidc_cookie_name=os.getenv("OIDC_COOKIE_NAME", "axiom_drift_session").strip() or "axiom_drift_session",
+        oidc_cookie_name=os.getenv("OIDC_COOKIE_NAME", "axiom_zeta_sentinel_session").strip() or "axiom_zeta_sentinel_session",
         oidc_cookie_secure=_env_bool("OIDC_COOKIE_SECURE", "true"),
         auth_audit_log_path=_empty_as_none(os.getenv("AUTH_AUDIT_LOG_PATH")),
         auth_audit_log_max_bytes=max(0, int(os.getenv("AUTH_AUDIT_LOG_MAX_BYTES", "10485760"))),

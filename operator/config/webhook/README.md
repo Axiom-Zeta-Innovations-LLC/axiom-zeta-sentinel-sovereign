@@ -1,6 +1,6 @@
 # Webhook Scaffold
 
-This directory contains admission webhook manifests for `AxiomDriftGateway` lifecycle safety.
+This directory contains admission webhook manifests for `AxiomZetaSentinelGateway` lifecycle safety.
 
 - `validating-webhook.yaml`: validates create/update requests.
 

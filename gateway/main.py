@@ -6,7 +6,7 @@ from gateway.api.routes_stabilize import router as stabilize_router
 from gateway.core.config import load_settings
 from gateway.core.state_backend import get_state_backend
 
-app = FastAPI(title="Axiom Drift Sovereign Gateway", version="0.1.0")
+app = FastAPI(title="Axiom Zeta Sentinel Sovereign Gateway", version="0.1.0")
 app.include_router(stabilize_router)
 app.include_router(team_router)
 app.include_router(auth_router)

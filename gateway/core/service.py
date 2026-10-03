@@ -3,7 +3,7 @@ from typing import Any
 from dataclasses import dataclass, field
 from threading import Lock
 
-from axiom_drift_core import DriftEngine
+from axiom_zeta_sentinel_core import DriftEngine
 
 from gateway.core.config import GatewaySettings, load_settings
 from gateway.core.policy import decide_actions
